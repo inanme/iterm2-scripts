@@ -4,6 +4,7 @@ import iterm2
 import socket
 
 
+# seems like pick an interpreter here ~/Library/Application Support/iTerm2, e.g: iterm2env-3.10
 # ~/Library/Application Support/iTerm2/Scripts
 # socat -U TCP-LISTEN:10558,fork EXEC:'/bin/ls',stderr,pty,echo=0
 def is_open() -> bool:
