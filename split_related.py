@@ -12,14 +12,13 @@ import unittest
 
 async def first_line(session):
     async with session.get_screen_streamer(want_contents=True) as streamer:
-        while True:
-            content = await streamer.async_get()
-            debug = "debug=1" in session.name  # cmd + i
-            if debug:
-                print(content.number_of_lines)
-                for line in range(content.number_of_lines):
-                    print(content.line(line).string)
-            return content.line(0).string
+        content = await streamer.async_get()
+        debug = "debug=1" in session.name  # cmd + i
+        if debug:
+            print(content.number_of_lines)
+            for line in range(content.number_of_lines):
+                print(content.line(line).string)
+        return content.line(0).string
 
 
 suffixes = ["us-east-1", "us-east-2", "us-west-2", "eu-central-1", "eu-west-1"]
@@ -50,6 +49,11 @@ async def main(connection):
         await command_session.async_send_text("clear;pwd\n")
         pwd_s = await first_line(command_session)
         files = relative_paths(pwd_s)
+        debug = "debug=1" in command_session.name  # cmd + i
+        if debug:
+            print(files)
+        if files == set():
+            await command_session.async_send_text("ls;false no related path\n")
         for file in files:
             next_session = await command_session.async_split_pane(vertical=False)
             await next_session.async_send_text(f"cd {file}\n")
